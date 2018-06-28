@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>ISILFaces</artifactId>
+		<groupId>com.ozcorp.isilfaces</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ISILFacesEAR</artifactId>
+	<packaging>ear</packaging>
+
+	<name>ISILFacesEAR</name>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<version.plugin.ear>3.0.1</version.plugin.ear>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.ozcorp.isilfaces</groupId>
+			<artifactId>ISILFacesEJB</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.ozcorp.isilfaces</groupId>
+			<artifactId>ISILFacesRS</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>compile</scope>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>${version.plugin.ear}</version>
+				<configuration>
+					<version>7</version>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<modules>
+						<ejbModule>
+							<groupId>com.ozcorp.isilfaces</groupId>
+							<artifactId>ISILFacesEJB</artifactId>
+							<bundleFileName>ISILFacesEJB-0.0.1-SNAPSHOT.jar</bundleFileName>
+						</ejbModule>
+						<webModule>
+							<groupId>com.ozcorp.isilfaces</groupId>
+							<artifactId>ISILFacesRS</artifactId>
+							<bundleFileName>ISILFacesEJB-0.0.1-SNAPSHOT.war</bundleFileName>
+							<contextRoot>/ISILFacesRS</contextRoot>
+						</webModule>
+					</modules>
+					<generateApplicationXml>true</generateApplicationXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

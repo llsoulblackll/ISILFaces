@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ozcorp.isilfaces</groupId>
@@ -14,15 +13,23 @@
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
 				<version>7.0</version>
+				<!--<type>jar</type>JAR BY DEFUALT I GUESS-->
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.amazonaws</groupId>
+				<artifactId>aws-java-sdk-bom</artifactId>
+				<version>1.11.358</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<modules>
 		<module>ISILFacesEAR</module>
 		<module>ISILFacesEJB</module>
 		<module>ISILFacesRS</module>
 	</modules>
-	
+
 </project>

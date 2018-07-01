@@ -73,7 +73,7 @@
 						<webModule>
 							<groupId>com.ozcorp.isilfaces</groupId>
 							<artifactId>ISILFacesRS</artifactId>
-							<bundleFileName>ISILFacesEJB-0.0.1-SNAPSHOT.war</bundleFileName>
+							<bundleFileName>ISILFacesRS-0.0.1-SNAPSHOT.war</bundleFileName>
 							<contextRoot>/ISILFacesRS</contextRoot>
 						</webModule>
 					</modules>

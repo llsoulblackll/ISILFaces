@@ -1,7 +1,7 @@
 package com.ozcorp.util;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.AmazonRekognitionClient;
 import com.amazonaws.services.rekognition.model.CompareFacesMatch;
@@ -20,6 +20,7 @@ public class AWSUtil {
 	public static float compareFaces() {
 		AmazonRekognition rekognitionClient = AmazonRekognitionClient.builder()
 				.withCredentials(new EnvironmentVariableCredentialsProvider())
+				.withRegion(Regions.US_WEST_2)
 				.build();
 		CompareFacesRequest request = new CompareFacesRequest()
 				.withSourceImage(new Image()

@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>ISILFaces</artifactId>
 		<groupId>com.ozcorp.isilfaces</groupId>
+		<artifactId>ISILFaces</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -31,6 +31,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>ISILFacesEJB</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

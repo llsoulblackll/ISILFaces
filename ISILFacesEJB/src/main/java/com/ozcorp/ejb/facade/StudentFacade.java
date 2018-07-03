@@ -14,7 +14,7 @@ import com.ozcorp.util.aws.Prediction;
 @Stateless
 public class StudentFacade extends AbstractFacade<Student> implements StudentFacadeLocal {
 	
-	@PersistenceContext(name = "ISILFacesPU")
+	@PersistenceContext(unitName = "ISILFacesPU")
 	private EntityManager em;
 	
 	public StudentFacade() {

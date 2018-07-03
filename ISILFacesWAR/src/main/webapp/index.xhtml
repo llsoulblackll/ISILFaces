@@ -15,7 +15,7 @@
 		<h:inputText pt:type="number" pt:step="0.01" value="#{index.similarityThreshold}"/>
 		<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*" value="#{index.uploadedFile}"/>
 		<h:commandButton action="#{index.compare}" value="Compare">
-			<f:ajax execute="@form" render="resultContainer"/>
+			<!--<f:ajax execute="@form" render="resultContainer"/>-->
 		</h:commandButton>
 	</h:form>
 	<div jsf:id="resultContainer">

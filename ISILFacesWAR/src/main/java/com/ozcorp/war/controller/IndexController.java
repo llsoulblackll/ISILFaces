@@ -1,5 +1,6 @@
 package com.ozcorp.war.controller;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.ejb.EJB;
@@ -7,12 +8,15 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
+import com.amazonaws.util.IOUtils;
 import com.ozcorp.ejb.facade.local.CompareFacesFacadeLocal;
 
 @Named("index")
 @ViewScoped
 public class IndexController implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@EJB
 	private CompareFacesFacadeLocal compareFacesFacade;
 	
@@ -20,8 +24,9 @@ public class IndexController implements Serializable {
 	private Float similarityThreshold;
 	private String accuracy;
 	
-	public void compare() {
-		accuracy = "22.32%";
+	public void compare() throws IOException {
+		accuracy = String.valueOf(compareFacesFacade == null);
+		//accuracy = String.valueOf(compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null).getAccuracy());
 	}
 	
 	public Part getUploadedFile() {

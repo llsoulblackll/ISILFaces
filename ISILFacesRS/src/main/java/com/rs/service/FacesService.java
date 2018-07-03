@@ -23,6 +23,6 @@ public class FacesService {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String echo() {
-        return "Hello World";//String.valueOf(compareFacesFacade.compareFaces());
+        return String.valueOf(compareFacesFacade.compareFaces(null, null));
     }
 }

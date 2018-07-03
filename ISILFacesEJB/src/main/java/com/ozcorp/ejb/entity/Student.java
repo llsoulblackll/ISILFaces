@@ -1,45 +1,58 @@
 package com.ozcorp.ejb.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Student")
-public class Alumno {
+@Table(name = "Student", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "DNI" })
+})
+public class Student implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id")
 	private Integer id;
 	
 	@Column(name = "Name")
-	private String nombre;
+	private String name;
 	
 	@Column(name = "LasName")
-	private String apellido;
+	private String lastName;
 	
 	@Column(name = "Sex")
-	private String sexo;
+	private String sex;
 	
 	@Column(name = "Age")
 	private Integer age;
 	
+	@Column(name = "ProfilePicture")
+	private String profilePicture;
+	
 	@Column(name = "DNI")
 	private String DNI;
 
-	public Alumno() {
+	public Student() {
 	}
 	
-	public Alumno(Integer id, String nombre, String apellido, String sexo, String dNI) {
+	public Student(Integer id, String nombre, String apellido, String sexo, Integer age, String profilePicture,
+			String dNI) {
 		super();
 		this.id = id;
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.sexo = sexo;
+		this.name = nombre;
+		this.lastName = apellido;
+		this.sex = sexo;
+		this.age = age;
+		this.profilePicture = profilePicture;
 		DNI = dNI;
 	}
 
@@ -52,27 +65,27 @@ public class Alumno {
 	}
 
 	public String getNombre() {
-		return nombre;
+		return name;
 	}
 
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		this.name = nombre;
 	}
 
 	public String getApellido() {
-		return apellido;
+		return lastName;
 	}
 
 	public void setApellido(String apellido) {
-		this.apellido = apellido;
+		this.lastName = apellido;
 	}
 
 	public String getSexo() {
-		return sexo;
+		return sex;
 	}
 
 	public void setSexo(String sexo) {
-		this.sexo = sexo;
+		this.sex = sexo;
 	}
 
 	public String getDNI() {
@@ -90,4 +103,13 @@ public class Alumno {
 	public void setAge(Integer age) {
 		this.age = age;
 	}
+	
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
 }

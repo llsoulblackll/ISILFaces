@@ -30,6 +30,7 @@
 		<module>ISILFacesEAR</module>
 		<module>ISILFacesEJB</module>
 		<module>ISILFacesRS</module>
+		<module>ISILFacesWAR</module>
 	</modules>
 
 </project>

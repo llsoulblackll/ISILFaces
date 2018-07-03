@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS Student
 	LastName VARCHAR(300),
 	Sex CHAR,
 	Age INT,
+	ProfilePicture TEXT,
 	DNI CHAR(8) UNIQUE
 );

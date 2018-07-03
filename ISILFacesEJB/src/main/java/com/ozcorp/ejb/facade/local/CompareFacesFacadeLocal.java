@@ -2,7 +2,9 @@ package com.ozcorp.ejb.facade.local;
 
 import javax.ejb.Local;
 
+import com.ozcorp.util.aws.Prediction;
+
 @Local
 public interface CompareFacesFacadeLocal {
-	float compareFaces();
+	Prediction compareFaces(byte[] targetImage, Float threshold);
 }

@@ -1,4 +1,4 @@
-package com.ozcorp.util;
+package com.ozcorp.util.aws;
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -14,9 +14,11 @@ import com.amazonaws.services.rekognition.model.S3Object;
 public class AWSUtil {
 	
 	public static final String BUCKET_NAME = "isilfaces-bucket";
+	public static final float SIMILARITY_THRESHOLD = 83f;
 	
-	private static float SIMILARITY_THRESHOLD = 83f;
-	
+	/**
+	 * @deprecated Use the CompareFacesFacade instead
+	 */
 	public static float compareFaces() {
 		AmazonRekognition rekognitionClient = AmazonRekognitionClient.builder()
 				.withCredentials(new EnvironmentVariableCredentialsProvider())

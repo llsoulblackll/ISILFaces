@@ -10,11 +10,12 @@ import javax.persistence.criteria.CriteriaQuery;
 public abstract class AbstractFacade<T> {
 	
 	private Class<T> entityType;
-	protected CriteriaBuilder criteriaBuilder;
+	//protected CriteriaBuilder criteriaBuilder;
 	
 	public AbstractFacade(Class<T> entityType) {
 		this.entityType = entityType;
-		criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		//CANNOT GET CRITERIA BUILDER SINCE FOR SOME REASON ENTITY MANAGER IS NOT YET INJECTED
+		//criteriaBuilder = getEntityManager().getCriteriaBuilder();
 	}
 	
 	public int insert(T entity) {
@@ -38,7 +39,7 @@ public abstract class AbstractFacade<T> {
 	}
 
 	public List<T> findAll() {
-		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityType);
+		CriteriaQuery<T> criteriaQuery = getEntityManager().getCriteriaBuilder().createQuery(entityType);
 		criteriaQuery.select(criteriaQuery.from(entityType));
 		return getEntityManager().createQuery(criteriaQuery).getResultList();
 	}

@@ -21,8 +21,8 @@ import com.ozcorp.util.aws.Prediction;
 @Consumes(MediaType.WILDCARD)
 public class FacesService {
 	
-	@EJB
-	private CompareFacesFacadeLocal compareFacesFacade;
+	//@EJB
+	//private CompareFacesFacadeLocal compareFacesFacade;
 	
 	@EJB
 	private StudentFacadeLocal studentFacade;
@@ -30,7 +30,8 @@ public class FacesService {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String echo() {
-        return String.valueOf(compareFacesFacade.compareFaces(null, null));
+        //return String.valueOf(compareFacesFacade.compareFaces(null, null));
+    	return "";
     }
     
     @GET

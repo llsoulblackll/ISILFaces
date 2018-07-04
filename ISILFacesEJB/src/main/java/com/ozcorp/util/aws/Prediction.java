@@ -5,23 +5,24 @@ import com.amazonaws.services.rekognition.model.S3Object;
 import com.ozcorp.ejb.entity.Student;
 
 public class Prediction extends Image {
-	
-	private static final long serialVersionUID = 1L;
-	
+
+	private static final long serialVersionUID = -755873999036799886L;
+
 	private Student student;
 	private float accuracy;
-	
+
 	public Prediction() {
-		withS3Object(new S3Object()
-				.withBucket(AWSUtil.BUCKET_NAME)
-				.withName(this.student.getProfilePicture())
-		);
 	}
 
 	public Prediction(Student student, float accuracy) {
-		this();
 		this.student = student;
 		this.accuracy = accuracy;
+		if (student != null) {
+			this.withS3Object(
+				new S3Object()
+					.withBucket(AWSUtil.BUCKET_NAME)
+					.withName(this.student.getProfilePicture()));
+		}
 	}
 
 	public Student getStudent() {

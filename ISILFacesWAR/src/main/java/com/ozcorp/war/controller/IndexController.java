@@ -3,13 +3,14 @@ package com.ozcorp.war.controller;
 import java.io.IOException;
 import java.io.Serializable;
 
-import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
 import com.amazonaws.util.IOUtils;
 import com.ozcorp.ejb.facade.local.CompareFacesFacadeLocal;
+import com.ozcorp.util.aws.Prediction;
 
 @Named("index")
 @ViewScoped
@@ -17,7 +18,7 @@ public class IndexController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	@EJB
+	@Inject
 	private CompareFacesFacadeLocal compareFacesFacade;
 	
 	private Part uploadedFile;
@@ -25,8 +26,11 @@ public class IndexController implements Serializable {
 	private String accuracy;
 	
 	public void compare() throws IOException {
-		accuracy = String.valueOf(compareFacesFacade == null);
-		//accuracy = String.valueOf(compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null).getAccuracy());
+		Prediction result = compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null);
+		if(result == null)
+			accuracy = "No se detecto ningun rostro en la imagen";
+		else
+			accuracy = String.valueOf(result.getAccuracy());
 	}
 	
 	public Part getUploadedFile() {

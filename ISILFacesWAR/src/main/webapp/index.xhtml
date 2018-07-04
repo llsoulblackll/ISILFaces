@@ -1,40 +1,159 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:jsf="http://xmlns.jcp.org/jsf"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrinks-to-fit=no" />
+	<title>jQuery Ajax File Uploader Widget</title>
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
+		integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+		crossorigin="anonymous" />
+
+	<!-- Custom styles -->
+	<h:outputStylesheet library="css" name="jquery.dm-uploader.min.css" />
+	<h:outputStylesheet library="css" name="styles.css" />
 </h:head>
 <h:body>
-	<div>
-		<img id="imgPreview" alt="not found" />
+	<main role="main" class="container">
+
+	<h1>jQuery Ajax File Uploader Widget</h1>
+	<p class="lead mb-4">A very lightweight Plugin for file uploading
+		using ajax(async) and includes support for queues, progress tracking
+		and drag and drop. This page demostrates the default basic
+		setup/config.</p>
+
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+
+			<div id="drag-and-drop-zone" class="dm-uploader p-5">
+				<h3 class="mb-5 mt-5 text-muted">Arrastra y suelta</h3>
+
+				<div class="btn btn-primary btn-block mb-5">
+					<span>Abrir el explorador de archivos</span>
+					<h:form enctype="multipart/form-data">
+						<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*"
+							value="#{index.uploadedFile}" />
+						<h:commandButton pt:id="uploadButton" action="#{index.compare}"
+							value="Compare" style="display: none;">
+							<f:ajax execute="@form" render="resultValue" />
+						</h:commandButton>
+					</h:form>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-6 col-sm-12">
+			<div class="card h-100">
+				<div class="card-header">Coincidencias</div>
+
+				<ul class="list-unstyled p-2 d-flex flex-column col" id="files">
+					<li class="text-muted text-center empty">Ninguna coincidencia.</li>
+					<li><img class="img-fluid"
+						src="https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg" />
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<h:form id="uploadForm" enctype="multipart/form-data">
-		<h:inputText pt:type="number" pt:step="0.01" value="#{index.similarityThreshold}"/>
-		<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*" value="#{index.uploadedFile}"/>
-		<h:commandButton action="#{index.compare}" value="Compare">
-			<!--<f:ajax execute="@form" render="resultContainer"/>-->
-		</h:commandButton>
-	</h:form>
-	<div jsf:id="resultContainer">
-		<h:outputText id="resultValue" value="#{index.accuracy}" />
+
+	<div id="responseMessageG" class="alert alert-info text-success hide"
+		role="alert"></div>
+
+	<div id="responseMessageB" class="alert alert-danger text-danger hide"
+		role="alert"></div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card h-100">
+				<div class="card-header">Debug Messages</div>
+
+				<ul jsf:id="resultsContainer" class="list-group list-group-flush" id="debug">
+					<li class="list-group-item text-muted empty">
+						<h:outputText id="resultValue" value="#{index.accuracy}" />
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<script type="application/javascript">
-		window.onload = () => {
-			var inputFace = document.getElementById('inputFace');
-			var imgPreview = document.getElementById('imgPreview');
-			var fileReader = new FileReader();
-			inputFace.onchange = function() {
-				if(this.files[0]){
-					fileReader.onload = () => {
-						imgPreview.src = fileReader.result;
-					};
-					fileReader.readAsDataURL(this.files[0]);
-				}
-			};
+	</main>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"
+		integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+		crossorigin="anonymous"></script>
+
+	<h:outputScript library="js" name="jquery.dm-uploader.min.js" />
+	<!--<h:outputScript library="js" name="demo-ui.js" />
+	<h:outputScript library="js" name="demo-config.js" />-->
+	<script>
+		var msgG = document.getElementById('responseMessageG');
+		var msgB = document.getElementById('responseMessageB');
+		var uploadButton = document.getElementById('uploadButton');
+		var dropZone = document.getElementById('drag-and-drop-zone');
+		var responseMessage = document.getElementById('responseMessage');
+		var inputFace = document.getElementById('inputFace');
+		dropZone.ondragover = function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			this.classList.add('active');
 		};
+		dropZone.ondragleave = function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			this.classList.remove('active');
+		};
+		dropZone.ondrop = function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			this.classList.remove('active');
+			var files = e.target.files || e.dataTransfer.files;
+			if(files.length > 0){
+				switch(files[0].type) {
+				case 'image/jpeg':
+				case 'image/jpg':
+				case 'image/png':
+					inputFace.files = files;
+					uploadButton.click();
+					break;
+				default:
+					displayMessage("Este tipo de archivo no esta admitido", true);
+					break;
+				}
+			}
+		};
+
+		inputFace.onchange = function() {
+			if(this.files[0]){
+				/*fileReader.onload = () => {
+					imgPreview.src = fileReader.result;
+				};
+				fileReader.readAsDataURL(th	is.files[0]);*/
+				uploadButton.click();
+			}
+		};
+		
+		function displayMessage(msg, err = false){
+			if(err){
+				msgG.classList.add('hide');
+				msgB.classList.remove('hide');
+				msgB.innerHTML = msg;
+			} else {
+				msgB.classList.add('hide');
+				msgG.classList.remove('hide');
+				msgG.innerHTML = msg;
+			}
+		}
 	</script>
 </h:body>
 </html>

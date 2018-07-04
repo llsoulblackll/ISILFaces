@@ -10,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+/*, uniqueConstraints = {
+@UniqueConstraint(columnNames = { "DNI" })
+}*/
 @Entity
-@Table(name = "Student", uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "DNI" })
-})
+@Table(name = "Student")
 public class Student implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -26,7 +27,7 @@ public class Student implements Serializable {
 	@Column(name = "Name")
 	private String name;
 	
-	@Column(name = "LasName")
+	@Column(name = "LastName")
 	private String lastName;
 	
 	@Column(name = "Sex")
@@ -44,9 +45,7 @@ public class Student implements Serializable {
 	public Student() {
 	}
 	
-	public Student(Integer id, String nombre, String apellido, String sexo, Integer age, String profilePicture,
-			String dNI) {
-		super();
+	public Student(Integer id, String nombre, String apellido, String sexo, Integer age, String profilePicture, String dNI) {
 		this.id = id;
 		this.name = nombre;
 		this.lastName = apellido;

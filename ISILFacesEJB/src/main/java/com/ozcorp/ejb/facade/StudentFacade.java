@@ -21,6 +21,7 @@ public class StudentFacade extends AbstractFacade<Student> implements StudentFac
 		super(Student.class);
 	}
 
+	//SINCE THIS IS AN INSTANCE METHOD AND THE INSTANCE HAS NOT YET BEEN CREATED IT WILL RETURN NULL ON PARENT CONSTRUCTOR
 	@Override
 	protected EntityManager getEntityManager() {
 		return em;

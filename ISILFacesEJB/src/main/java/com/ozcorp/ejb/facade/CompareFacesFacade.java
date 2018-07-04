@@ -16,9 +16,11 @@ import com.amazonaws.services.rekognition.model.CompareFacesRequest;
 import com.amazonaws.services.rekognition.model.CompareFacesResult;
 import com.amazonaws.services.rekognition.model.ComparedFace;
 import com.amazonaws.services.rekognition.model.Image;
+import com.amazonaws.services.rekognition.model.InvalidParameterException;
 import com.amazonaws.services.rekognition.model.S3Object;
 import com.ozcorp.ejb.facade.local.CompareFacesFacadeLocal;
 import com.ozcorp.ejb.facade.local.StudentFacadeLocal;
+import com.ozcorp.util.aws.AWSUtil;
 import com.ozcorp.util.aws.Prediction;
 
 @Stateless
@@ -43,12 +45,18 @@ public class CompareFacesFacade implements CompareFacesFacadeLocal {
 		
 		for(Prediction prediction : studentFacade.findAllPredictions()) {
 			CompareFacesRequest request = new CompareFacesRequest()
-					.withSourceImage(new Image()
+					.withSourceImage(prediction)
+					.withTargetImage(new Image()
 							.withBytes(ByteBuffer.wrap(targetImage)))
-					.withTargetImage(prediction)
 					.withSimilarityThreshold(threshold != null ? threshold : SIMILARITY_THRESHOLD);
-
-			CompareFacesResult result = rekognitionClient.compareFaces(request);
+			
+			CompareFacesResult result;
+			
+			try {
+				result = rekognitionClient.compareFaces(request);
+			} catch (InvalidParameterException ex) {
+				return null;
+			}
 			
 			if(result.getFaceMatches().size() > 0) {
 				CompareFacesMatch bestMatch = result.getFaceMatches().stream().max((f1, f2) -> {
@@ -59,6 +67,9 @@ public class CompareFacesFacade implements CompareFacesFacadeLocal {
 				break;
 			}
 		}
+		
+		if(closestResult == null)
+			closestResult = new Prediction(null, 0);
 		
 		return closestResult;
 		//return result.getFaceMatches().size() > 0 ? result.getFaceMatches().get(0).getSimilarity() : 0.0f;

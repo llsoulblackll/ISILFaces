@@ -8,7 +8,7 @@
 <h:head>
 	<meta charset="utf-8" />
 	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrinks-to-fit=no" />
+		content="width=device-width, initial-scale=1" />
 	<title>jQuery Ajax File Uploader Widget</title>
 
 	<!-- Bootstrap core CSS -->
@@ -22,7 +22,7 @@
 	<h:outputStylesheet library="css" name="styles.css" />
 </h:head>
 <h:body>
-	<main role="main" class="container">
+	<div class="container">
 
 	<h1>jQuery Ajax File Uploader Widget</h1>
 	<p class="lead mb-4">A very lightweight Plugin for file uploading
@@ -31,24 +31,25 @@
 		setup/config.</p>
 
 	<div class="row">
-		<div class="col-md-6 col-sm-12">
+		<div class="col-md-6 col-sm-12 max-h text-center">
 
-			<div id="drag-and-drop-zone" class="dm-uploader p-5">
+			<div id="drag-and-drop-zone" class="dm-uploader p-5" jsf:rendered="#{empty index.base64Holder}">
 				<h3 class="mb-5 mt-5 text-muted">Arrastra y suelta</h3>
 
 				<div class="btn btn-primary btn-block mb-5">
 					<span>Abrir el explorador de archivos</span>
-					<h:form enctype="multipart/form-data">
+					<h:form id="uploadForm" enctype="multipart/form-data">
 						<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*"
 							value="#{index.uploadedFile}" />
+						<h:inputHidden pt:id="inputBase64" id="inputBase64" value="#{index.base64Holder}" />
 						<h:commandButton pt:id="uploadButton" action="#{index.compare}"
 							value="Compare" style="display: none;">
-							<f:ajax execute="@form" render="resultValue" />
+								<!--<f:ajax execute="@form" render="resultsContainer out" />-->
 						</h:commandButton>
 					</h:form>
 				</div>
 			</div>
-
+			<img class="img-fluid h-100" src="#{index.base64Holder}" jsf:rendered="#{not empty index.base64Holder}"/>
 		</div>
 		<div class="col-md-6 col-sm-12">
 			<div class="card h-100">
@@ -56,26 +57,26 @@
 
 				<ul class="list-unstyled p-2 d-flex flex-column col" id="files">
 					<li class="text-muted text-center empty">Ninguna coincidencia.</li>
-					<li><img class="img-fluid"
-						src="https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg" />
+					<li>
+						<img class="img-fluid h-100" 
+							src="#{index.resultImage}" />
+							
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 
-	<div id="responseMessageG" class="alert alert-info text-success hide"
-		role="alert"></div>
+	<div id="responseMessageG" class="alert alert-info text-success hide"></div>
 
-	<div id="responseMessageB" class="alert alert-danger text-danger hide"
-		role="alert"></div>
+	<div id="responseMessageB" class="alert alert-danger text-danger hide"></div>
 
 	<div class="row">
 		<div class="col-12">
 			<div class="card h-100">
-				<div class="card-header">Debug Messages</div>
+				<div class="card-header">Resultado</div>
 
-				<ul jsf:id="resultsContainer" class="list-group list-group-flush" id="debug">
+				<ul jsf:id="resultsContainer" class="list-group list-group-flush debug">
 					<li class="list-group-item text-muted empty">
 						<h:outputText id="resultValue" value="#{index.accuracy}" />
 					</li>
@@ -83,7 +84,7 @@
 			</div>
 		</div>
 	</div>
-	</main>
+	</div>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"
 		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -93,56 +94,61 @@
 		integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
 		crossorigin="anonymous"></script>
 
-	<h:outputScript library="js" name="jquery.dm-uploader.min.js" />
+	<!--<h:outputScript library="js" name="jquery.dm-uploader.min.js" />-->
 	<!--<h:outputScript library="js" name="demo-ui.js" />
 	<h:outputScript library="js" name="demo-config.js" />-->
 	<script>
-		var msgG = document.getElementById('responseMessageG');
-		var msgB = document.getElementById('responseMessageB');
-		var uploadButton = document.getElementById('uploadButton');
-		var dropZone = document.getElementById('drag-and-drop-zone');
-		var responseMessage = document.getElementById('responseMessage');
-		var inputFace = document.getElementById('inputFace');
-		dropZone.ondragover = function(e){
-			e.stopPropagation();
-			e.preventDefault();
-			this.classList.add('active');
-		};
-		dropZone.ondragleave = function(e){
-			e.stopPropagation();
-			e.preventDefault();
-			this.classList.remove('active');
-		};
-		dropZone.ondrop = function(e){
-			e.stopPropagation();
-			e.preventDefault();
-			this.classList.remove('active');
-			var files = e.target.files || e.dataTransfer.files;
-			if(files.length > 0){
-				switch(files[0].type) {
-				case 'image/jpeg':
-				case 'image/jpg':
-				case 'image/png':
-					inputFace.files = files;
-					uploadButton.click();
-					break;
-				default:
-					displayMessage("Este tipo de archivo no esta admitido", true);
-					break;
-				}
-			}
-		};
 
-		inputFace.onchange = function() {
-			if(this.files[0]){
-				/*fileReader.onload = () => {
-					imgPreview.src = fileReader.result;
-				};
-				fileReader.readAsDataURL(th	is.files[0]);*/
-				uploadButton.click();
-			}
+		window.onload = function(){
+			var msgG = document.getElementById('responseMessageG');
+			var msgB = document.getElementById('responseMessageB');
+			var uploadButton = document.getElementById('uploadButton');
+			var dropZone = document.getElementById('drag-and-drop-zone');
+			var responseMessage = document.getElementById('responseMessage');
+			var inputFace = document.getElementById('inputFace');
+			var inputBase64 = document.getElementById('inputBase64');
+			var fileReader = new FileReader();
+			dropZone.ondragover = function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				this.classList.add('active');
+			};
+			dropZone.ondragleave = function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				this.classList.remove('active');
+			};
+			dropZone.ondrop = function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				this.classList.remove('active');
+				var files = e.target.files || e.dataTransfer.files;
+				if(files.length > 0){
+					switch(files[0].type) {
+					case 'image/jpeg':
+					case 'image/jpg':
+					case 'image/png':
+						inputFace.files = files;
+						uploadButton.click();
+						break;
+					default:
+						displayMessage("Este tipo de archivo no esta admitido", true);
+						break;
+					}
+				}
+			};
+
+			inputFace.onchange = function() {
+				if(this.files[0]){
+					fileReader.onload = () => {
+						inputBase64.value = fileReader.result
+						uploadButton.click();
+					};
+					fileReader.readAsDataURL(this.files[0]);
+				}
+			};
 		};
-		
+	
 		function displayMessage(msg, err = false){
 			if(err){
 				msgG.classList.add('hide');

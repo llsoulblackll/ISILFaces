@@ -24,13 +24,19 @@ public class IndexController implements Serializable {
 	private Part uploadedFile;
 	private Float similarityThreshold;
 	private String accuracy;
+	private String base64Holder;
+	private Prediction chosen;
+	private String resultImage;
 	
 	public void compare() throws IOException {
-		Prediction result = compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null);
-		if(result == null)
+		System.out.println(base64Holder);
+		chosen = compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null);
+		if(chosen == null)
 			accuracy = "No se detecto ningun rostro en la imagen";
-		else
-			accuracy = String.valueOf(result.getAccuracy());
+		else {
+			accuracy = String.valueOf(chosen.getAccuracy());
+			resultImage = String.format("https://isilfaces-bucket.s3.amazonaws.com/%s", chosen.getStudent().getProfilePicture());
+		}
 	}
 	
 	public Part getUploadedFile() {
@@ -55,5 +61,29 @@ public class IndexController implements Serializable {
 
 	public void setAccuracy(String accuracy) {
 		this.accuracy = accuracy;
+	}
+
+	public String getBase64Holder() {
+		return base64Holder;
+	}
+
+	public void setBase64Holder(String base64Holder) {
+		this.base64Holder = base64Holder;
+	}
+
+	public Prediction getChosen() {
+		return chosen;
+	}
+
+	public void setChosen(Prediction chosen) {
+		this.chosen = chosen;
+	}
+
+	public String getResultImage() {
+		return resultImage;
+	}
+
+	public void setResultImage(String resultImage) {
+		this.resultImage = resultImage;
 	}	
 }

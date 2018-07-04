@@ -7,9 +7,8 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
 	<meta charset="utf-8" />
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1" />
-	<title>jQuery Ajax File Uploader Widget</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Rekognition Client</title>
 
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet"
@@ -24,66 +23,75 @@
 <h:body>
 	<div class="container">
 
-	<h1>jQuery Ajax File Uploader Widget</h1>
-	<p class="lead mb-4">A very lightweight Plugin for file uploading
-		using ajax(async) and includes support for queues, progress tracking
-		and drag and drop. This page demostrates the default basic
-		setup/config.</p>
+		<h1>Rekognition Client</h1>
+		<p class="lead mb-4">Al seleccionar una foto puedes obtener
+			detalles de ella y compararla con otras en amazon S3</p>
 
-	<div class="row">
-		<div class="col-md-6 col-sm-12 max-h text-center">
+		<!--<h:commandLink class="btn btn-warning btn-block" action="" value="Predecir denuevo" />-->
+		<h:link class="btn btn-warning btn-block h5" value="Predecir Denuevo"
+			outcome="index" />
 
-			<div id="drag-and-drop-zone" class="dm-uploader p-5" jsf:rendered="#{empty index.base64Holder}">
-				<h3 class="mb-5 mt-5 text-muted">Arrastra y suelta</h3>
+		<div class="row">
+			<div class="col-md-6 col-sm-12 max-h text-center">
 
-				<div class="btn btn-primary btn-block mb-5">
-					<span>Abrir el explorador de archivos</span>
-					<h:form id="uploadForm" enctype="multipart/form-data">
-						<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*"
-							value="#{index.uploadedFile}" />
-						<h:inputHidden pt:id="inputBase64" id="inputBase64" value="#{index.base64Holder}" />
-						<h:commandButton pt:id="uploadButton" action="#{index.compare}"
-							value="Compare" style="display: none;">
+				<div id="drag-and-drop-zone" class="dm-uploader p-5"
+					jsf:rendered="#{empty index.base64Holder}">
+					<h3 class="mb-5 mt-5 text-muted">Arrastra y suelta</h3>
+
+					<div class="btn btn-primary btn-block mb-5">
+						<span>Abrir el explorador de archivos</span>
+						<h:form id="uploadForm" enctype="multipart/form-data">
+							<h:inputFile id="inputFace" pt:id="inputFace" pt:accept="image/*"
+								value="#{index.uploadedFile}" />
+							<h:inputHidden pt:id="inputBase64" id="inputBase64"
+								value="#{index.base64Holder}" />
+							<h:commandButton pt:id="uploadButton" action="#{index.compare}"
+								value="Compare" style="display: none;">
 								<!--<f:ajax execute="@form" render="resultsContainer out" />-->
-						</h:commandButton>
-					</h:form>
+							</h:commandButton>
+						</h:form>
+					</div>
+				</div>
+				<img class="img-fluid h-100" src="#{index.base64Holder}"
+					jsf:rendered="#{not empty index.base64Holder}" />
+			</div>
+			<div id="predictionsContainer" class="col-md-6 col-sm-12 text-center">
+				<div class="card h-100">
+					<div class="card-header">Coincidencias</div>
+
+					<ul class="list-unstyled p-2 d-flex flex-column col" id="files">
+						<li class="text-muted text-center empty"
+							jsf:rendered="#{empty index.resultImages}">Ninguna
+							coincidencia.</li>
+						<ui:repeat value="#{index.resultImages}" var="i">
+							<li><img class="img-thumbnail" src="#{i}" /></li>
+						</ui:repeat>
+					</ul>
 				</div>
 			</div>
-			<img class="img-fluid h-100" src="#{index.base64Holder}" jsf:rendered="#{not empty index.base64Holder}"/>
 		</div>
-		<div class="col-md-6 col-sm-12">
-			<div class="card h-100">
-				<div class="card-header">Coincidencias</div>
 
-				<ul class="list-unstyled p-2 d-flex flex-column col" id="files">
-					<li class="text-muted text-center empty">Ninguna coincidencia.</li>
-					<li>
-						<img class="img-fluid h-100" 
-							src="#{index.resultImage}" />
-							
-					</li>
-				</ul>
+		<div id="responseMessageG" class="alert alert-info text-success hide"></div>
+
+		<div id="responseMessageB" class="alert alert-danger text-danger hide"></div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card h-100">
+					<div class="card-header">Resultado</div>
+					<ul jsf:id="resultsContainer"
+						class="list-group list-group-flush debug">
+						<li class="list-group-item text-muted empty"
+							jsf:rendered="#{empty index.resultLabels}">No se detecto
+							ningun rostro humano en la imagen</li>
+						<ui:repeat var="label" value="#{index.resultLabels}">
+							<li class="list-group-item text-muted empty"><h:outputText
+									value="#{label}" /></li>
+						</ui:repeat>
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div>
-
-	<div id="responseMessageG" class="alert alert-info text-success hide"></div>
-
-	<div id="responseMessageB" class="alert alert-danger text-danger hide"></div>
-
-	<div class="row">
-		<div class="col-12">
-			<div class="card h-100">
-				<div class="card-header">Resultado</div>
-
-				<ul jsf:id="resultsContainer" class="list-group list-group-flush debug">
-					<li class="list-group-item text-muted empty">
-						<h:outputText id="resultValue" value="#{index.accuracy}" />
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -108,6 +116,8 @@
 			var inputFace = document.getElementById('inputFace');
 			var inputBase64 = document.getElementById('inputBase64');
 			var fileReader = new FileReader();
+
+			if(dropZone){
 			dropZone.ondragover = function(e){
 				e.stopPropagation();
 				e.preventDefault();
@@ -129,7 +139,6 @@
 					case 'image/jpg':
 					case 'image/png':
 						inputFace.files = files;
-						uploadButton.click();
 						break;
 					default:
 						displayMessage("Este tipo de archivo no esta admitido", true);
@@ -147,6 +156,7 @@
 					fileReader.readAsDataURL(this.files[0]);
 				}
 			};
+			}
 		};
 	
 		function displayMessage(msg, err = false){

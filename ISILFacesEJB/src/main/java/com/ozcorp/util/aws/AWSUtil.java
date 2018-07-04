@@ -14,7 +14,7 @@ import com.amazonaws.services.rekognition.model.S3Object;
 public class AWSUtil {
 	
 	public static final String BUCKET_NAME = "isilfaces-bucket";
-	public static final float SIMILARITY_THRESHOLD = 83f;
+	public static final float SIMILARITY_THRESHOLD = 50f;
 	
 	/**
 	 * @deprecated Use the CompareFacesFacade instead

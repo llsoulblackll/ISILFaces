@@ -2,6 +2,8 @@ package com.ozcorp.war.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -26,17 +28,31 @@ public class IndexController implements Serializable {
 	private String accuracy;
 	private String base64Holder;
 	private Prediction chosen;
-	private String resultImage;
+	private List<String> resultImages = new ArrayList<>();
+	private List<String> resultLabels = new ArrayList<>();
 	
 	public void compare() throws IOException {
 		System.out.println(base64Holder);
+		/*System.out.println(base64Holder);
 		chosen = compareFacesFacade.compareFaces(IOUtils.toByteArray(uploadedFile.getInputStream()), null);
 		if(chosen == null)
 			accuracy = "No se detecto ningun rostro en la imagen";
 		else {
 			accuracy = String.valueOf(chosen.getAccuracy());
-			resultImage = String.format("https://isilfaces-bucket.s3.amazonaws.com/%s", chosen.getStudent().getProfilePicture());
+			resultImages = null;//String.format("https://isilfaces-bucket.s3.amazonaws.com/%s", chosen.getStudent().getProfilePicture());
+		}*/
+		byte[] target = IOUtils.toByteArray(uploadedFile.getInputStream());
+		List<Prediction> results = compareFacesFacade.compareAllFaces(target, null);
+		if(results == null) {
+			accuracy = "No se detecto ningun rostro en la imagen";
+			return;
 		}
+		results.forEach(f -> {
+			resultImages.add(String.format("https://isilfaces-bucket.s3.amazonaws.com/%s", f.getStudent().getProfilePicture()));
+		});
+		
+		resultLabels.addAll(compareFacesFacade.detectLabels(target));
+		resultLabels.addAll(compareFacesFacade.detectFace(target));
 	}
 	
 	public Part getUploadedFile() {
@@ -79,11 +95,15 @@ public class IndexController implements Serializable {
 		this.chosen = chosen;
 	}
 
-	public String getResultImage() {
-		return resultImage;
+	public List<String> getResultImages() {
+		return resultImages;
 	}
 
-	public void setResultImage(String resultImage) {
-		this.resultImage = resultImage;
+	public List<String> getResultLabels() {
+		return resultLabels;
+	}
+
+	public void setResultLabels(List<String> resultLabels) {
+		this.resultLabels = resultLabels;
 	}	
 }

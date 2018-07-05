@@ -1,3 +1,3 @@
-## ISILFaces Cliente de AWS Rekognition
+## ISILFaces 
 
-Sube una imagen y veras sabras que es
+Un cliente más de AWS Rekognition, sube una imagen y sabras que es

@@ -113,9 +113,15 @@ public class CompareFacesFacade implements CompareFacesFacadeLocal {
 					return (f1.getSimilarity() > f2.getSimilarity() ? f1.getSimilarity() : f2.getSimilarity()).intValue(); 
 				}).get();
 				posible.setAccuracy(bestMatch.getSimilarity());
+				posible.getStudent().setProfilePicture(String.format("%s/%s", AWSUtil.BUCKET_URL, posible.getStudent().getProfilePicture()));
 				predictions.add(posible);
 			}
 		}
+		
+		predictions.sort((p1, p2) -> {
+			//-1 TO GET DESCENDING ORDER
+			return p1.getAccuracy() > p2.getAccuracy() ? -1 : 1;
+		});
 		
 		return predictions;
 	}

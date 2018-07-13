@@ -66,3 +66,7 @@ ul {
 .btn.h5 {
 	font-size: 1.25rem;
 }
+
+#drag-and-drop-zone {
+	margin-bottom: 15px;
+}

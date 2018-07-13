@@ -47,9 +47,13 @@ public class IndexController implements Serializable {
 			accuracy = "No se detecto ningun rostro en la imagen";
 			return;
 		}
-		results.forEach(f -> {
-			resultImages.add(String.format("https://isilfaces-bucket.s3.amazonaws.com/%s", f.getStudent().getProfilePicture()));
+		
+		results.forEach(p -> {
+			System.out.println(p.getAccuracy());
+			resultImages.add(p.getStudent().getProfilePicture());
 		});
+		
+		chosen = results.size() > 0 ? results.get(0) : null;
 		
 		resultLabels.addAll(compareFacesFacade.detectLabels(target));
 		resultLabels.addAll(compareFacesFacade.detectFace(target));

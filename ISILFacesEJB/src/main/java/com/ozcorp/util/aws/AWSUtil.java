@@ -14,6 +14,7 @@ import com.amazonaws.services.rekognition.model.S3Object;
 public class AWSUtil {
 	
 	public static final String BUCKET_NAME = "isilfaces-bucket";
+	public static final String BUCKET_URL = "https://isilfaces-bucket.s3.amazonaws.com";
 	public static final float SIMILARITY_THRESHOLD = 50f;
 	
 	/**

@@ -54,6 +54,7 @@
 				</div>
 				<img class="img-fluid h-100" src="#{index.base64Holder}"
 					jsf:rendered="#{not empty index.base64Holder}" />
+				<h4 style="padding-top: 15px">#{index.chosen.student.name}</h4>	
 			</div>
 			<div id="predictionsContainer" class="col-md-6 col-sm-12 text-center">
 				<div class="card h-100">
@@ -61,8 +62,7 @@
 
 					<ul class="list-unstyled p-2 d-flex flex-column col" id="files">
 						<li class="text-muted text-center empty"
-							jsf:rendered="#{empty index.resultImages}">Ninguna
-							coincidencia.</li>
+							jsf:rendered="#{empty index.resultImages}">Ninguna coincidencia.</li>
 						<ui:repeat value="#{index.resultImages}" var="i">
 							<li><img class="img-thumbnail" src="#{i}" /></li>
 						</ui:repeat>
